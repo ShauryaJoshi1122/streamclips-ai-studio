@@ -27,6 +27,8 @@ def _envelope(samples, rate=8000):
 def sync(part, audio, guess, reach=25.0):
     """Stream time of the part's first frame, by matching its sound to the stream audio.
     Returns (seconds, confidence 0-1)."""
+    if not audio:
+        return guess, 1.0
     probe_len = 20.0
     a = _envelope(decode(part, 8000, 0.5, probe_len))
     lo = max(0.0, guess + 0.5 - reach)
