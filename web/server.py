@@ -311,7 +311,8 @@ def run_custom_clip_job(job: Job):
         work = pipeline.work_dir(url)
         meta = media.metadata(url, args, work)
 
-        audio_file = media.audio(url, args, work)
+        # For custom clips, no need to download full audio track; slice has its own audio
+        audio_file = None
         day = datetime.date.today().isoformat()
         outdir = (DATA / day / slug("custom", 30)
                   / f"{slug(meta['name'], 24)}__{slug(meta['title'], 40)}")
