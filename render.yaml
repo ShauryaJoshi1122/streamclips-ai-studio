@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: streamclips-ai-studio
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    healthCheckPath: /api/status
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: STREAMCLIPS_SCAN_MODEL
+        value: tiny
+      - key: STREAMCLIPS_CAPTION_MODEL
+        value: tiny

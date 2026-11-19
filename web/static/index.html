@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamClips AI Studio · Automated Short-Form Video Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="min-h-screen bg-[#070b14] text-slate-100 flex flex-col selection:bg-violet-500 selection:text-white">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-[#090d16]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-pink-500 flex items-center justify-center shadow-lg shadow-violet-500/30">
+          <i data-lucide="scissors" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-violet-400 bg-clip-text text-transparent">StreamClips AI</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/30">Studio</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Automated 9:16 Viral Shorts & Reels Creator</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <button onclick="switchTab('studio')" id="tab-studio" class="tab-btn active px-3.5 py-1.5 rounded-lg text-sm font-medium border border-transparent transition-all flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-violet-400"></i>
+          <span>Studio</span>
+        </button>
+        <button onclick="switchTab('finder')" id="tab-finder" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-2">
+          <i data-lucide="compass" class="w-4 h-4 text-indigo-400"></i>
+          <span>Find Streams</span>
+        </button>
+        <button onclick="switchTab('memes')" id="tab-memes" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-2">
+          <i data-lucide="laugh" class="w-4 h-4 text-pink-400"></i>
+          <span>Meme Vault</span>
+        </button>
+        <button onclick="switchTab('library')" id="tab-library" class="tab-btn px-3.5 py-1.5 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all flex items-center gap-2">
+          <i data-lucide="film" class="w-4 h-4 text-emerald-400"></i>
+          <span>Library</span>
+          <span id="library-badge" class="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-300 font-mono">0</span>
+        </button>
+        <button onclick="switchTab('settings')" id="tab-settings" class="tab-btn p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all" title="Settings">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </nav>
+
+      <!-- Status Indicators -->
+      <div class="hidden lg:flex items-center gap-3">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Engine: <b class="text-white font-medium" id="engine-status">Ready</b></span>
+        </div>
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300">
+          <span class="text-pink-400 font-semibold" id="header-meme-count">567</span>
+          <span>Memes</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================= TAB 1: STUDIO ================= -->
+    <section id="view-studio" class="space-y-6">
+      
+      <!-- Hero Banner -->
+      <div class="relative overflow-hidden rounded-2xl glass-panel p-6 sm:p-8 bg-gradient-to-r from-violet-950/40 via-slate-900/60 to-indigo-950/30 border border-violet-500/20">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-xs text-violet-300 mb-3 font-medium">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-violet-400"></i>
+            <span>AI Automated Video Clipping Engine</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-2">
+            Turn Any Long Stream Into Viral 9:16 Vertical Clips
+          </h1>
+          <p class="text-sm text-slate-300 leading-relaxed mb-4">
+            Paste a YouTube, Twitch, Kick link or upload a local video. Our engine transcribes speech with Whisper AI, detects high-energy shouting & chat bursts, stacks facecam + gameplay, adds word-by-word captions, and splices viral Indian meme punchlines automatically.
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs text-slate-400">
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Facecam Stack / Crop</span>
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Whisper Captions</span>
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> 567 Indian Memes</span>
+            <span class="flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i> Auto LUFS Audio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Studio Input Form -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left 2 Cols: Main Setup -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Video Input Source Card -->
+          <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i data-lucide="link" class="w-4 h-4 text-violet-400"></i>
+                <span>1. Video Source</span>
+              </h2>
+              <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+                <button type="button" onclick="setSourceMode('url')" id="mode-url-btn" class="px-3 py-1 rounded-md font-medium bg-violet-600 text-white">Stream URL</button>
+                <button type="button" onclick="setSourceMode('file')" id="mode-file-btn" class="px-3 py-1 rounded-md font-medium text-slate-400 hover:text-white">Upload File</button>
+              </div>
+            </div>
+
+            <!-- URL Mode -->
+            <div id="source-url-box" class="space-y-3">
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                  <i data-lucide="globe" class="w-5 h-5"></i>
+                </div>
+                <input type="text" id="stream-url" placeholder="https://www.youtube.com/watch?v=... or https://kick.com/gamerfleet" class="w-full pl-11 pr-24 py-3 bg-slate-950/80 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-white placeholder-slate-500 transition-all">
+                <button type="button" onclick="pasteFromClipboard()" class="absolute right-2 top-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition-all flex items-center gap-1">
+                  <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
+                  <span>Paste</span>
+                </button>
+              </div>
+              
+              <!-- Quick Samples -->
+              <div class="flex items-center gap-2 flex-wrap text-xs text-slate-400 pt-1">
+                <span class="text-slate-500">Quick Test:</span>
+                <button type="button" onclick="fillSample('https://kick.com/gamerfleet/videos/01a1e512-3490-7c1e-a118-640b89ba448e', 'gaming')" class="px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700">Kick Gamerfleet</button>
+                <button type="button" onclick="fillSample('https://kick.com/rajatpawar/videos/01a1ef39-24b0-7fa9-a4ae-4b077a5a8220', 'funny reaction')" class="px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700">Kick Rajat Pawar</button>
+                <button type="button" onclick="useLocalTestSample()" class="px-2 py-0.5 rounded bg-violet-900/50 hover:bg-violet-800/50 text-violet-300 border border-violet-700/50 flex items-center gap-1">
+                  <i data-lucide="hard-drive" class="w-3 h-3"></i>
+                  <span>Workspace Test Video (44s)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload File Mode -->
+            <div id="source-file-box" class="space-y-3 hidden">
+              <div id="dropzone" onclick="document.getElementById('file-input').click()" class="border-2 border-dashed border-slate-700 hover:border-violet-500/70 bg-slate-950/50 rounded-xl p-8 text-center cursor-pointer transition-all">
+                <input type="file" id="file-input" accept="video/*,audio/*" class="hidden" onchange="handleFileSelect(event)">
+                <div class="w-12 h-12 mx-auto rounded-full bg-violet-600/10 text-violet-400 flex items-center justify-center mb-3">
+                  <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                </div>
+                <p class="text-sm font-semibold text-slate-200">Click to upload or drag & drop video</p>
+                <p class="text-xs text-slate-500 mt-1">MP4, MKV, MOV, WebM (up to 2GB)</p>
+              </div>
+              <div id="uploaded-file-info" class="hidden p-3 rounded-xl bg-violet-950/30 border border-violet-500/30 flex items-center justify-between">
+                <div class="flex items-center gap-3 overflow-hidden">
+                  <i data-lucide="video" class="w-5 h-5 text-violet-400 shrink-0"></i>
+                  <div class="truncate">
+                    <p id="uploaded-name" class="text-xs font-semibold text-white truncate">video.mp4</p>
+                    <p id="uploaded-meta" class="text-[10px] text-slate-400">12 MB · 00:44</p>
+                  </div>
+                </div>
+                <button type="button" onclick="clearUploadedFile()" class="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-red-400"><i data-lucide="x" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Styling & Layout Options -->
+          <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-6">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-violet-400"></i>
+              <span>2. Visual Layout & Viral Formatting</span>
+            </h2>
+
+            <!-- Layout Radios -->
+            <div>
+              <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2.5">9:16 Video Layout</label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                
+                <!-- Stack -->
+                <label class="layout-card cursor-pointer block p-3.5 rounded-xl border border-slate-800 hover:border-violet-500/50 bg-slate-950/60 transition-all relative">
+                  <input type="radio" name="layout" value="stack" checked class="hidden">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-14 rounded-md bg-slate-900 border border-slate-700 flex flex-col overflow-hidden shrink-0">
+                      <div class="h-5 bg-violet-600/40 border-b border-violet-500/40 flex items-center justify-center text-[8px] font-bold text-violet-300">CAM</div>
+                      <div class="flex-1 bg-slate-800/60 flex items-center justify-center text-[7px] text-slate-400">GAME</div>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-xs font-bold text-white">Stack</span>
+                        <span class="text-[9px] px-1.5 py-0.2 rounded bg-violet-500/20 text-violet-300">Popular</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Facecam on top, gameplay below. Auto-finds streamer face.</p>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Crop -->
+                <label class="layout-card cursor-pointer block p-3.5 rounded-xl border border-slate-800 hover:border-violet-500/50 bg-slate-950/60 transition-all relative">
+                  <input type="radio" name="layout" value="crop" class="hidden">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-14 rounded-md bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0">
+                      <i data-lucide="user" class="w-5 h-5 text-indigo-400"></i>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-xs font-bold text-white">Smart Crop</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">Smoothly tracks the speaker's face. Ideal for podcasts & IRL.</p>
+                    </div>
+                  </div>
+                </label>
+
+                <!-- Blur -->
+                <label class="layout-card cursor-pointer block p-3.5 rounded-xl border border-slate-800 hover:border-violet-500/50 bg-slate-950/60 transition-all relative">
+                  <input type="radio" name="layout" value="blur" class="hidden">
+                  <div class="flex items-start gap-3">
+                    <div class="w-10 h-14 rounded-md bg-slate-900 border border-slate-700 flex flex-col justify-center items-center shrink-0 relative overflow-hidden">
+                      <div class="absolute inset-0 bg-violet-900/30 blur-xs"></div>
+                      <div class="w-8 h-4 bg-slate-700 rounded-xs relative z-10"></div>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-xs font-bold text-white">Cinematic Blur</span>
+                      </div>
+                      <p class="text-[11px] text-slate-400 mt-0.5">16:9 frame centered over blurred background.</p>
+                    </div>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+            <!-- Indian Meme Reactions Integration -->
+            <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center">
+                    <i data-lucide="laugh" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xs font-bold text-white">Indian Meme Reaction Splice</h3>
+                    <p class="text-[11px] text-slate-400">Automatically inserts matching punchline meme from templates.meme</p>
+                  </div>
+                </div>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20 font-medium">567 Templates</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Meme Selection Mode</label>
+                  <select id="meme-mode" onchange="toggleMemePicker(this.value)" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-violet-500">
+                    <option value="auto">✨ Auto Match (Based on Transcript & Emotions)</option>
+                    <option value="specific">🎯 Choose Specific Meme Template...</option>
+                    <option value="none">🚫 No Meme Reactions</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Meme Splicing Style</label>
+                  <select id="meme-style" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-violet-500">
+                    <option value="insert">Cutaway Punchline (Mid-Clip Reaction)</option>
+                    <option value="outro">Outro Ending (At End of Clip)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Specific Meme Picker (Hidden by default) -->
+              <div id="specific-meme-container" class="hidden pt-1">
+                <label class="block text-[11px] text-slate-400 mb-1">Select Indian Meme</label>
+                <select id="specific-meme-select" class="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-violet-500">
+                  <option value="paisa-barbaad">Paisa Barbaad Bc (Akshay Kumar)</option>
+                  <option value="humko-pareshan-kiya-gaya">Humko Pareshan Kiya Gaya (Babu Rao)</option>
+                  <option value="aur-abhi-to-ruko-climax-abhi-baaki-hai">Aur Abhi To Ruko Climax Baaki Hai</option>
+                  <option value="ms-dhoni-attitude">MS Dhoni Attitude Walk</option>
+                  <option value="samaj-rahe-ho">Samajh Rahe Ho Aap? (Modi Ji)</option>
+                  <option value="mere-haatho-se-buri-maut-marta-ye">Mere Haatho Se Buri Maut Marta Ye</option>
+                  <option value="abhijeet-laughing">Abhijeet Laughing (CID)</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Right 1 Col: Engine & Clip Parameters -->
+        <div class="space-y-6">
+          
+          <!-- Parameters Card -->
+          <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-5">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-violet-400"></i>
+              <span>3. Automation Settings</span>
+            </h2>
+
+            <!-- Topic / Game -->
+            <div>
+              <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Topic / Category</label>
+              <input type="text" id="stream-topic" value="Gaming & Highlights" placeholder="e.g. GTA 6, Valorant, BGMI, Podcast" class="w-full px-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-violet-500">
+              <div class="flex flex-wrap gap-1 mt-1.5">
+                <button type="button" onclick="document.getElementById('stream-topic').value = 'Valorant'" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300">Valorant</button>
+                <button type="button" onclick="document.getElementById('stream-topic').value = 'GTA 6'" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300">GTA 6</button>
+                <button type="button" onclick="document.getElementById('stream-topic').value = 'BGMI'" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300">BGMI</button>
+                <button type="button" onclick="document.getElementById('stream-topic').value = 'Podcast Reaction'" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300">Podcast</button>
+              </div>
+            </div>
+
+            <!-- Number of Clips -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-xs font-medium text-slate-400 uppercase tracking-wider">Number of Clips</label>
+                <span id="clips-count-display" class="text-xs font-bold text-violet-400">3 Clips</span>
+              </div>
+              <input type="range" id="clips-count" min="1" max="5" value="3" oninput="document.getElementById('clips-count-display').innerText = this.value + ' Clips'" class="w-full accent-violet-500">
+            </div>
+
+            <!-- AI Brain Selector -->
+            <div>
+              <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Highlight Detection Brain</label>
+              <select id="brain-select" class="w-full px-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-violet-500">
+                <option value="auto">⚡ Smart Audio & Peak Hype Detector (Built-in, Fast & Free)</option>
+                <option value="gemini_api">🧠 Gemini 2.5 Flash API (LLM Smart Picker)</option>
+                <option value="claude">🤖 Claude Code CLI (if installed)</option>
+                <option value="gemini">🤖 Gemini CLI (if installed)</option>
+              </select>
+              <p class="text-[10px] text-slate-500 mt-1">Built-in detector measures laughter, screams (+dB spikes) and chat velocity.</p>
+            </div>
+
+            <!-- Subtitle Language -->
+            <div>
+              <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Subtitle Language</label>
+              <select id="language-select" class="w-full px-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-violet-500">
+                <option value="">Auto-Detect Language</option>
+                <option value="en">English / Hinglish (Roman English Captions)</option>
+                <option value="hi">Hindi (Devanagari Captions)</option>
+                <option value="es">Spanish</option>
+              </select>
+            </div>
+
+            <!-- Advanced Section Accordion -->
+            <details class="text-xs border-t border-slate-800/80 pt-3">
+              <summary class="cursor-pointer text-slate-400 hover:text-white font-medium flex items-center justify-between">
+                <span>Advanced Controls</span>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+              </summary>
+              <div class="space-y-3 pt-3">
+                <div>
+                  <label class="block text-[11px] text-slate-400 mb-1">Clip Specific Section (h:mm:ss-h:mm:ss)</label>
+                  <input type="text" id="section-range" placeholder="e.g. 0:10:00-0:35:00" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Min Length (sec)</label>
+                    <input type="number" id="min-length" value="15" min="10" max="60" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] text-slate-400 mb-1">Max Length (sec)</label>
+                    <input type="number" id="max-length" value="55" min="15" max="90" class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white">
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                  <input type="checkbox" id="fast-encoding" checked class="rounded accent-violet-500">
+                  <label for="fast-encoding" class="text-[11px] text-slate-300">Enable Hardware Video Encoding (NVENC/QSV)</label>
+                </div>
+              </div>
+            </details>
+
+            <!-- Launch Button -->
+            <button type="button" onclick="startGeneration()" id="start-btn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-pink-600 hover:from-violet-500 hover:via-indigo-500 hover:to-pink-500 text-white font-bold text-sm tracking-wide shadow-lg shadow-violet-600/30 transition-all flex items-center justify-center gap-2 group">
+              <i data-lucide="play" class="w-4 h-4 fill-white group-hover:scale-110 transition-transform"></i>
+              <span>Generate Viral Clips Now</span>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Live Job Progress Card (Appears during generation) -->
+      <div id="live-progress-container" class="hidden glass-panel rounded-2xl p-6 border border-violet-500/40 bg-slate-950/90 shadow-2xl space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-violet-600/20 text-violet-400 flex items-center justify-center shrink-0">
+              <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-white" id="live-step-title">Processing Video Stream...</h3>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 font-semibold" id="live-percent">15%</span>
+              </div>
+              <p class="text-xs text-slate-400" id="live-sub-step">Downloading and analyzing audio signals</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleTerminalLogs()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+              <span>Terminal Output</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+          <div id="live-progress-bar" class="bg-gradient-to-r from-violet-600 to-pink-500 h-2.5 rounded-full transition-all duration-300" style="width: 15%"></div>
+        </div>
+
+        <!-- Terminal Logs Drawer (Collapsible) -->
+        <div id="terminal-logs-drawer" class="mt-3 rounded-xl bg-black/90 border border-slate-800 p-4 font-mono text-xs text-slate-300 h-48 overflow-y-auto space-y-1">
+          <div class="text-slate-500">[00:00] > StreamClips engine initialized</div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 2: STREAM FINDER ================= -->
+    <section id="view-finder" class="hidden space-y-6">
+      
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-4">
+        <div class="max-w-xl">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="compass" class="w-5 h-5 text-indigo-400"></i>
+            <span>Discover Trending Live Streams</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">
+            Search recent long videos & live streams by game or topic without API keys. Pick any stream to automatically cut clips.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+          <div class="relative flex-1 w-full">
+            <input type="text" id="finder-topic" placeholder="e.g. Valorant, GTA 6, BGMI, Podcast, Minecraft" class="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500">
+            <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5"></i>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <select id="finder-when" class="px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white">
+              <option value="today">Today</option>
+              <option value="hour">Past Hour</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+            <button onclick="searchStreams()" id="finder-btn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-all flex items-center gap-1.5 shrink-0">
+              <i data-lucide="search" class="w-3.5 h-3.5"></i>
+              <span>Find Streams</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Streams Grid -->
+      <div id="streams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Filled by JS -->
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 3: INDIAN MEME VAULT ================= -->
+    <section id="view-memes" class="hidden space-y-6">
+      
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i data-lucide="laugh" class="w-5 h-5 text-pink-400"></i>
+              <span>Indian Meme Reactions Catalog</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">
+              567 scraped Indian meme templates across 29 pages from templates.meme/templates/country/IN with full video clips.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="meme-search-input" oninput="searchMemesDebounced()" placeholder="Search (e.g. paisa, babu rao, dhoni, climax)..." class="w-64 px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-pink-500">
+          </div>
+        </div>
+
+        <!-- Mood Filters -->
+        <div id="meme-mood-filters" class="flex flex-wrap gap-1.5 pt-1">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- Memes Grid -->
+      <div id="memes-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <!-- Filled by JS -->
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 4: VIDEO LIBRARY ================= -->
+    <section id="view-library" class="hidden space-y-6">
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="film" class="w-5 h-5 text-emerald-400"></i>
+            <span>Generated Video Library</span>
+          </h2>
+          <p class="text-xs text-slate-400">Ready-to-post 9:16 vertical clips with captions, scores, and thumbnails.</p>
+        </div>
+        <button onclick="loadLibrary()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1.5">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          <span>Refresh</span>
+        </button>
+      </div>
+
+      <!-- Library Projects -->
+      <div id="library-container" class="space-y-6">
+        <!-- Filled by JS -->
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 5: SETTINGS ================= -->
+    <section id="view-settings" class="hidden space-y-6 max-w-3xl mx-auto">
+      
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-6">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <i data-lucide="settings" class="w-5 h-5 text-slate-400"></i>
+          <span>Engine Settings & Configurations</span>
+        </h2>
+
+        <div class="space-y-4">
+          
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Gemini API Key (Optional)</label>
+            <p class="text-[11px] text-slate-400 mb-2">If provided, enables the Gemini Flash AI brain for moments picking without needing local CLI logins.</p>
+            <div class="flex gap-2">
+              <input type="password" id="gemini-key-input" placeholder="AIzaSy..." class="flex-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-violet-500">
+              <button onclick="saveGeminiKey()" class="px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-bold text-white">Save Key</button>
+            </div>
+            <p id="gemini-status-text" class="text-[10px] text-slate-500 mt-1"></p>
+          </div>
+
+          <div class="border-t border-slate-800 pt-4">
+            <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-2">System Diagnostics</h3>
+            <div id="system-diag-list" class="grid grid-cols-2 gap-3 text-xs">
+              <!-- Diag pills -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= VIDEO PREVIEW MODAL ================= -->
+  <div id="video-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+      
+      <!-- Video Player (Vertical 9:16) -->
+      <div class="md:w-1/2 bg-black flex items-center justify-center p-4">
+        <div class="w-full max-w-[280px] aspect-[9/16] rounded-xl overflow-hidden bg-slate-950 shadow-2xl relative">
+          <video id="modal-video-player" controls class="w-full h-full object-cover"></video>
+        </div>
+      </div>
+
+      <!-- Video Details & Actions -->
+      <div class="md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span id="modal-type-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-400 uppercase tracking-wider">REACTION</span>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs text-slate-400">Score:</span>
+              <span id="modal-score" class="text-sm font-extrabold text-emerald-400 font-mono">92/100</span>
+            </div>
+          </div>
+
+          <h3 id="modal-title" class="text-base font-bold text-white mb-2">Clip Title</h3>
+          <p id="modal-why" class="text-xs text-slate-400 mb-4 italic">High energy volume spike and reaction.</p>
+
+          <!-- Ready-to-Post Caption Box -->
+          <div class="mb-4">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Caption & Hashtags To Paste</label>
+            <div class="relative">
+              <textarea id="modal-caption-text" readonly rows="4" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 font-mono focus:outline-none resize-none"></textarea>
+              <button onclick="copyModalCaption()" class="absolute right-2 top-2 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 flex items-center gap-1">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-4 border-t border-slate-800">
+          <a id="modal-download-btn" href="#" download class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Download MP4</span>
+          </a>
+          <button onclick="closeVideoModal()" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs">Close</button>
+        </div>
+      </div>
+
+      <!-- Close Button -->
+      <button onclick="closeVideoModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800/80 text-slate-400 hover:text-white flex items-center justify-center">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 border border-violet-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold toast-animate">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-text">Caption copied to clipboard!</span>
+  </div>
+
+  <script src="/app.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
